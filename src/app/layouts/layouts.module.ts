@@ -6,6 +6,9 @@ import { FullScreenComponent } from './full-screen/full-screen.component';
   imports: [
     CommonModule
   ],
-  declarations: [FullScreenComponent]
+  declarations: [FullScreenComponent],
+  exports: [
+    FullScreenComponent
+  ]
 })
 export class LayoutsModule { }
