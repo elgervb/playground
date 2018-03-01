@@ -25,6 +25,7 @@ export class ParticlesPageComponent implements OnInit {
 
   private context: CanvasRenderingContext2D;
   private particles$: Observable<Particle[]>;
+  private particles: Particle[];
 
   constructor(private store: Store<fromParticles.State>) {
     this.particles$ = store.pipe(select(fromParticles.getAllParticles))
@@ -38,6 +39,8 @@ export class ParticlesPageComponent implements OnInit {
     for(var i = 0; i < this.canvasSettings.number; i++) {
       this.add(this.createParticle());
     }
+    this.particles$.subscribe(particles => this.particles = [...particles.map(particle => ({...particle}))]);
+
     Observable.interval(33).subscribe(this.draw.bind(this));
   }
 
@@ -51,7 +54,10 @@ export class ParticlesPageComponent implements OnInit {
     this.context.fillRect(0, 0, this.canvasElement.nativeElement.width, this.canvasElement.nativeElement.height);
     this.context.globalCompositeOperation = "lighter";
 
-    this.particles$.forEach(particles => particles.forEach(particle => this.drawParticle(particle)));
+    if (this.particles) {
+      debugger;
+      this.particles.forEach(particle => this.drawParticle(particle));
+    }
   }
 
   private createParticle(): Particle {
