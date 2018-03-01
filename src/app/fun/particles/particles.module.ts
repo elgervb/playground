@@ -6,8 +6,9 @@ import { StoreModule } from '@ngrx/store';
 import { ParticlesRoutingModule } from './particles-routing.module';
 import { ParticlesPageComponent } from './containers/particles.page';
 import { LayoutsModule } from '../../layouts/layouts.module';
-import { SettingsComponent } from './components/settings.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { reducers } from './reducers';
+import { CanvasComponent } from './components/canvas/canvas.component';
 
 
 @NgModule({
@@ -18,6 +19,6 @@ import { reducers } from './reducers';
     ReactiveFormsModule,
     StoreModule.forFeature('particles', reducers),
   ],
-  declarations: [ParticlesPageComponent, SettingsComponent]
+  declarations: [ParticlesPageComponent, SettingsComponent, CanvasComponent]
 })
 export class ParticlesModule { }
