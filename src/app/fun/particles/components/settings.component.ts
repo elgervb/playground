@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CanvasSettings } from '../particles.models';
+import { CanvasSettings } from '../models';
 
 @Component({
   selector: 'evb-settings',

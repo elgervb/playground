@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Particle, defaultCanvasSettings, defaultParticleSettings } from '../particles.models';
+import { Particle, defaultCanvasSettings, defaultParticleSettings } from '../models';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
+
+import * as fromParticles from '../reducers';
+import * as particles from '../actions/particles.actions';
 
 @Component({
   selector: 'evb-particles',
@@ -20,9 +24,11 @@ export class ParticlesPageComponent implements OnInit {
   canvasSettings = defaultCanvasSettings;
 
   private context: CanvasRenderingContext2D;
-  private particles = new Set<Particle>();
+  private particles$: Observable<Particle[]>;
 
-  constructor() {}
+  constructor(private store: Store<fromParticles.State>) {
+    this.particles$ = store.pipe(select(fromParticles.getAllParticles))
+  }
 
   ngOnInit() {
     this.context = (this.canvasElement.nativeElement as HTMLCanvasElement).getContext('2d');
@@ -32,12 +38,11 @@ export class ParticlesPageComponent implements OnInit {
     for(var i = 0; i < this.canvasSettings.number; i++) {
       this.add(this.createParticle());
     }
-
     Observable.interval(33).subscribe(this.draw.bind(this));
   }
 
   add(particle: Particle) {
-    this.particles.add(particle);
+    this.store.dispatch(new particles.AddOne(particle));
   }
 
   draw() {
@@ -46,7 +51,7 @@ export class ParticlesPageComponent implements OnInit {
     this.context.fillRect(0, 0, this.canvasElement.nativeElement.width, this.canvasElement.nativeElement.height);
     this.context.globalCompositeOperation = "lighter";
 
-    this.particles.forEach(this.drawParticle.bind(this));
+    this.particles$.forEach(particles => particles.forEach(particle => this.drawParticle(particle)));
   }
 
   private createParticle(): Particle {
@@ -64,10 +69,18 @@ export class ParticlesPageComponent implements OnInit {
     // color
     const color = this.fillColor();
 
-    return {color, radius, x, y, vx, vy }
+    return {color, radius, x, y, vx, vy, id: this.guid() }
+  }
+
+  private guid(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
   }
 
   private drawParticle(particle: Particle) {
+    debugger;
     const gradient = this.context.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius);
     gradient.addColorStop(0, particle.color);
     gradient.addColorStop(defaultParticleSettings.particleBlur, particle.color);

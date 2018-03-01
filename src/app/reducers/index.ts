@@ -29,5 +29,5 @@ export const reducers: ActionReducerMap<AppState> = {
 
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
-  ? [logger, storeFreeze]
+  ? [logger]
   : [];
