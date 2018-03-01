@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Particle, defaultCanvasSettings, defaultParticleSettings } from './particles.models';
+import { Particle, defaultCanvasSettings, defaultParticleSettings } from '../particles.models';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 
@@ -7,6 +7,7 @@ import 'rxjs/add/observable/interval';
   selector: 'evb-particles',
   template: `
     <evb-full-screen>
+      <evb-settings [canvasSettings]="canvasSettings"></evb-settings>
       <canvas #canvas class="particles__canvas"></canvas>
     </evb-full-screen>
   `,
@@ -15,17 +16,20 @@ import 'rxjs/add/observable/interval';
 export class ParticlesComponent implements OnInit {
 
   @ViewChild('canvas') private canvasElement: ElementRef;
+
+  canvasSettings = defaultCanvasSettings;
+
   private context: CanvasRenderingContext2D;
   private particles = new Set<Particle>();
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.context = (this.canvasElement.nativeElement as HTMLCanvasElement).getContext('2d');
     this.canvasElement.nativeElement.height = window.innerHeight;
     this.canvasElement.nativeElement.width = window.innerWidth;
 
-    for(var i = 0; i < defaultCanvasSettings.number; i++) {
+    for(var i = 0; i < this.canvasSettings.number; i++) {
       this.add(this.createParticle());
     }
 
@@ -38,7 +42,7 @@ export class ParticlesComponent implements OnInit {
 
   draw() {
     this.context.globalCompositeOperation = "source-over";
-    this.context.fillStyle = "rgba(52, 55, 60, "+ defaultCanvasSettings.trail+")";
+    this.context.fillStyle = "rgba(52, 55, 60, "+ this.canvasSettings.trail+")";
     this.context.fillRect(0, 0, this.canvasElement.nativeElement.width, this.canvasElement.nativeElement.height);
     this.context.globalCompositeOperation = "lighter";
 
@@ -55,8 +59,8 @@ export class ParticlesComponent implements OnInit {
     const x = Math.max(radius+1, Math.min(width - radius, Math.random() * width));
     const y = Math.max(radius+1, Math.min(height - radius, Math.random() * height));
     // velocity
-    const vx = Math.random()*defaultParticleSettings.velocityX + ((defaultParticleSettings.velocityX / 2) * -1);
-    const vy = Math.random()*defaultParticleSettings.velocityY + ((defaultParticleSettings.velocityY / 2) * -1);
+    const vx = Math.random()*defaultParticleSettings.velocity + ((defaultParticleSettings.velocity / 2) * -1);
+    const vy = Math.random()*defaultParticleSettings.velocity + ((defaultParticleSettings.velocity / 2) * -1);
     // color
     const color = this.fillColor();
 
@@ -75,7 +79,7 @@ export class ParticlesComponent implements OnInit {
     this.context.fill();
 
     this.collisionDetectionCanvasBorders(particle);
-    debugger;
+
     particle.x += particle.vx;
     particle.y += particle.vy;
   }
