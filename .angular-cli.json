@@ -57,6 +57,10 @@
   "defaults": {
     "styleExt": "scss",
     "component": {
-      "inlineTemplate": true}
+      "inlineTemplate": true
+    },
+    "schematics": {
+      "collection": "@ngrx/schematics"
+    }
   }
 }
