@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ParticlesRoutingModule } from './particles-routing.module';
-import { ParticlesComponent } from './particles/particles.component';
+import { ParticlesPageComponent } from './containers/particles.page';
 import { LayoutsModule } from '../../layouts/layouts.module';
-import { SettingsComponent } from './settings/settings.component';
+import { SettingsComponent } from './components/settings.component';
 
 @NgModule({
   imports: [
@@ -14,6 +14,6 @@ import { SettingsComponent } from './settings/settings.component';
     ParticlesRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [ParticlesComponent, SettingsComponent]
+  declarations: [ParticlesPageComponent, SettingsComponent]
 })
 export class ParticlesModule { }

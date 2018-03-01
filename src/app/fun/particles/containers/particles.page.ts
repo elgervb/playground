@@ -11,9 +11,9 @@ import 'rxjs/add/observable/interval';
       <canvas #canvas class="particles__canvas"></canvas>
     </evb-full-screen>
   `,
-  styleUrls: ['./particles.component.scss']
+  styleUrls: ['./particles.page.scss']
 })
-export class ParticlesComponent implements OnInit {
+export class ParticlesPageComponent implements OnInit {
 
   @ViewChild('canvas') private canvasElement: ElementRef;
 

@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ParticlesComponent } from './particles/particles.component';
+import { ParticlesPageComponent } from './containers/particles.page';
 
 const routes: Routes = [
   {
-    component: ParticlesComponent,
+    component: ParticlesPageComponent,
     path: ''
   }
 ];
