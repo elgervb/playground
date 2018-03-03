@@ -2,6 +2,8 @@
 html {
   box-sizing: border-box;
   font-size: 16px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 *, *:before, *:after {
@@ -9,6 +11,14 @@ html {
 }
 
 body {
+  text-rendering: optimizeLegibility;
+  line-height: 1;
   margin: 0;
   padding: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+body, input, select, textarea {
+  font-family: Open Sans, sans-serif;
 }
