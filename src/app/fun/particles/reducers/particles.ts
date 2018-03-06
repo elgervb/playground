@@ -29,13 +29,25 @@ export function reducer(state = initialState, action: ParticlesActions): State {
 
     case ParticlesActionTypes.Create:
       if (action.payload === 1) {
-        return adapter.addOne(createParticle(action.containerWidth, action.containerHeight), state);
+        return adapter.addOne(createParticle(action.containerWidth, action.containerHeight), {
+          ...state
+        });
       }
       const particles = [];
       for (let i = 0; i < action.payload; i++) {
         particles.push(createParticle(action.containerWidth, action.containerHeight));
       }
-      return adapter.addAll(particles, state);
+      return adapter.addAll(particles, {
+        ...state
+      });
+
+    case ParticlesActionTypes.Delete:
+      return adapter.removeOne(action.payload.id, {...state});
+
+    case ParticlesActionTypes.UpdateAll:
+      return adapter.updateMany(action.payload, {
+        ...state
+      });
 
     default:
       return state;
