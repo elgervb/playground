@@ -1,0 +1,35 @@
+$progressbar-background: #dfdfdf !default;
+$progressbar-foreground: #51C87B !default;
+$progressbar-height: .25rem !default;
+$progressbar-width: 100% !default;
+$progressbar-color: darken($progressbar-foreground, 10%) !default;
+$progressbar-color-gt-50: lighten($progressbar-background, 10%) !default;
+
+.progressbar {
+  background-color: $progressbar-background;
+  color: $progressbar-color;
+  height: $progressbar-height;
+  position: relative;
+  width: $progressbar-width;
+
+  &.progress--with-text::after {
+    content: attr(data-progress)"%";
+    display: block;
+    font-size: 1em;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &.progress--gt-50 {
+    color: $progressbar-color-gt-50;
+  }
+
+  .progressbar__inner {
+    background-color: $progressbar-foreground;
+    height: 100%;
+    transition: width .1s ease-out;
+    width: 0;
+  }
+}

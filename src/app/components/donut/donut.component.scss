@@ -1,0 +1,43 @@
+@import 'src/style/abstracts/all';
+
+$donut-primary: #27ae60 !default;
+$donut-secundary: #ecf0f1 !default;
+
+:host {
+  display: inline-flex;
+  position: relative;
+  font-size: 2em;
+}
+// the ::after component cannot be placed on the svg, as image cannot have dynamic content
+:host(.progress--with-text::after) {
+  content: attr(data-progress) '%';
+  display: block;
+  font-size: 1em;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.progress {
+  height: auto;
+  position: relative;
+  transform: rotate(-90deg);
+  width: auto;
+}
+
+.progress__meter, .progress__value {
+  fill: none;
+}
+
+.progress__meter {
+  stroke: $donut-secundary;
+}
+
+.progress__value {
+  stroke: $donut-primary;
+
+  &.arc-left {
+    transform: scaleY(-1);
+    transform-origin: center;
+  }
+}

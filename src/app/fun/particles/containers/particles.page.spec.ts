@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { LayoutsModule } from '../../../layouts/layouts.module';
 import { ParticlesPageComponent } from './particles.page';
+import { SettingsComponent } from '../components/settings/settings.component'
+import { CanvasComponent } from '../components/canvas/canvas.component';
 
 describe('ParticlesComponent', () => {
   let component: ParticlesPageComponent;
@@ -8,7 +10,8 @@ describe('ParticlesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ParticlesPageComponent ]
+      declarations: [ ParticlesPageComponent, SettingsComponent, CanvasComponent ],
+      imports: [LayoutsModule]
     })
     .compileComponents();
   }));
