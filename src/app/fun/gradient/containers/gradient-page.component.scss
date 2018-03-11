@@ -1,0 +1,30 @@
+:host {
+  color: white;
+  text-shadow: 1px 1px 1px black;
+}
+
+input[type=color] {
+  position: relative;
+
+  &:after {
+    background: inherit;
+    content: '';
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.icon-refresh {
+  cursor: pointer;
+  height: 2rem;
+  width: 2rem;
+}
+
+.icon-refresh__line {
+  fill: white;
+}
+

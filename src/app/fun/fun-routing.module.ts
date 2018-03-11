@@ -10,6 +10,9 @@ const routes: Routes = [
       {
         path: 'particles',
         loadChildren: 'app/fun/particles/particles.module#ParticlesModule'
+      }, {
+        path: 'gradient',
+        loadChildren: 'app/fun/gradient/gradient.module#GradientModule'
       }
     ]
   }
