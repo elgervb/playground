@@ -1,21 +1,37 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+
+interface Gradient {
+  colorFrom: string;
+  colorTo: string;
+  rotation: number;
+}
 
 @Component({
   selector: 'evb-gradient-page',
   template: `
   <evb-full-screen [style.background]="gradient">
-    <div>
-      From: <input type="color" (input)="changeColorFrom($event.target.value)" [value]="colorFrom.value" [style.background]="colorFrom.value">
-    </div>
-    <div>
-      To: <input type="color" (input)="changeColorTo($event.target.value)" [value]="colorTo.value" [style.background]="colorTo.value">
-    </div>
-    <div><input type="number" min="0" max="360" (input)="changeRotation($event.target.value)" [value]="rotation.value"></div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label> From:
+          <input class="form-control" type="color" formControlName="colorFrom" [style.background]="form.get('colorFrom').value">
+        </label>
+      </div>
+      <div class="form-group">
+        <label> To:
+          <input class="form-control" type="color" formControlName="colorTo" [style.background]="form.get('colorTo').value">
+        </label>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">save</button>
+      </div>
+    </form>
     <div>
       <svg (click)="refresh()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294.843 294.843" class="icon-refresh">
         <g>
@@ -29,57 +45,56 @@ import { takeUntil } from 'rxjs/operators';
   `,
   styleUrls: ['./gradient-page.component.scss']
 })
-export class GradientPageComponent implements OnInit, OnDestroy {
-
-  colorFrom = new BehaviorSubject<string>(this.randomColor());
-  colorTo = new BehaviorSubject<string>(this.randomColor());
-  rotation = new BehaviorSubject<number>(45);
+export class GradientPageComponent implements OnInit {
 
   gradient: string;
 
-  private unsubscribe = new Subject<void>();
+  form: FormGroup;
 
-  constructor() { }
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    combineLatest(this.colorFrom, this.colorTo, this.rotation, (colorFrom, colorTo, degrees) => {
-      if (colorFrom && colorTo) {
-        this.gradient = this.calculateCssGradient(colorFrom, colorTo, degrees || 0);
-      }
-    })
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe.next(undefined);
-    this.unsubscribe.complete();
-  }
-  changeColorFrom(color: string) {
-    this.colorFrom.next(color);
-  }
-
-  changeColorTo(color: string) {
-    this.colorTo.next(color);
-  }
-
-  changeRotation(degrees: number) {
-    this.rotation.next(degrees);
-  }
-
-  calculateCssGradient(colorFrom: string, colorTo: string, degrees: number) {
-    return `linear-gradient(${degrees}deg, ${colorFrom}, ${colorTo})`;
+    this.createForm({
+      colorFrom: this.randomColor(),
+      colorTo: this.randomColor(),
+      rotation: 45
+    });
   }
 
   refresh() {
-    this.colorFrom.next(this.randomColor());
-    this.colorTo.next(this.randomColor());
+    this.form.patchValue({
+      colorFrom: this.randomColor(),
+      colorTo: this.randomColor(),
+      rotation: 45
+    });
+    this.submit();
+  }
+
+  submit() {
+    const value: Gradient = this.form.value;
+
+    this.gradient = this.calculateCssGradient(value);
+  }
+
+  private calculateCssGradient(gradient: Gradient) {
+    return `linear-gradient(${gradient.rotation}deg, ${gradient.colorFrom}, ${gradient.colorTo})`;
+  }
+
+  private createForm(gradient: Gradient) {
+    this.form = this.formBuilder.group({
+      rotation: ['', [Validators.min(0), Validators.max(255)]],
+      colorFrom: ['', [Validators.pattern(/#[a-fA-F0-9]{6}/), Validators.required]],
+      colorTo: ['', [Validators.pattern(/#[a-fA-F0-9]{6}/), Validators.required]]
+    });
+
+    this.form.patchValue(gradient);
+    this.submit();
   }
 
   private randomColor(): string {
-    const r = Math.random()*255>>0;
-    const g = Math.random()*255>>0;
-    const b = Math.random()*255>>0;
+    const r = Math.random() * 255 >> 0;
+    const g = Math.random() * 255 >> 0;
+    const b = Math.random() * 255 >> 0;
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 }
